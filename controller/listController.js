@@ -7,8 +7,7 @@ import movieList from "../model/movieListModel.js";
 const createList = async(req, res) => {
   const {movieListName} = req.body;
   console.log(movieListName)
-  console.log(req.user)
-
+  
   if(!movieListName){
     res.status(402).json('Movie List name is required')
     return;
@@ -88,4 +87,44 @@ const moviesInList = async(req, res) => {
     res.json(result)
 }
 
-export {createList, getList, AddMovieToList, moviesInList}
+//drop list
+//Acess: Private
+//Route: POST /api/list/deletelist
+
+const deleteList = async(req, res) => {
+  
+  const {movieListName} = req.body;
+  console.log(movieListName)  
+
+  if(!movieListName){
+    res.status(404).json('something went wrong');
+    return;
+  }
+
+  try {
+
+    // check whether that list already exist in database or not
+    const getMovieListFromDB = await movieList.findOne({movieListName});
+
+    if(!getMovieListFromDB){
+      res.status(404).json('something went wrong');
+      return;
+    }
+
+    
+    const deleted = await movieList.deleteOne({movieListName});
+
+    if(deleted.acknowledged){
+      res.status(202).json(deleted);
+    }
+    else {
+      res.status(202).json('Something went wrong, Try again');
+    }
+
+  } catch (error) {
+    res.json(501).json('Something went wrong')
+  }
+  
+}
+
+export {createList, getList, AddMovieToList, moviesInList, deleteList}
