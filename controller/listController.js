@@ -39,10 +39,19 @@ const createList = async(req, res) => {
 
 //get list of movie created by that user
 //Acess: Private
-//Route: POST /api/list/getlist
+//Route: POST /api/list/getlist/private
 
-const getList = async(req, res) => {
+const getListPrivate = async(req, res) => {
   const myMovieList = await movieList.find({createdBy: req.user})
+  res.json(myMovieList)
+}
+
+//get list of movie created by all user
+//Acess: Private
+//Route: POST /api/list/getlist/public
+
+const getListPublic = async(req, res) => {
+  const myMovieList = await movieList.find()
   res.json(myMovieList)
 }
 
@@ -127,4 +136,4 @@ const deleteList = async(req, res) => {
   
 }
 
-export {createList, getList, AddMovieToList, moviesInList, deleteList}
+export {createList, getListPrivate,getListPublic, AddMovieToList, moviesInList, deleteList}
